@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <style type="text/css">
+    
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            background-color: #f2f2f2;
+            flex-direction: column;
+        }
+        
+        .search-container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .logo img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .search-box {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        #search-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px 0 0 24px;
+            outline: none;
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+        }
+        
+        #search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 1px solid #dfe1e5;
+            border-radius: 0 24px 24px 0;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+            transition: background-color 0.3s ease;
+        }
+        
+        #search-button:hover {
+            background-color: #e8e8e8;
+        }
+        
+        #loading-area {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #4285f4;
+        }
+        
+        #results {
+            margin-top: 20px;
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .result-item {
+            display: flex;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .result-image {
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+            margin-right: 15px;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .result-image img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .result-info {
+            flex-grow: 1;
+        }
+        
+        .result-title {
+            font-size: 18px;
+            color: #1a0dab;
+            text-decoration: none;
+        }
+        
+        .result-title:hover {
+            text-decoration: underline;
+        }
+        
+        .result-description {
+            font-size: 14px;
+            color: #4d5156;
+            margin: 5px 0;
+        }
+        
+        .result-url {
+            font-size: 12px;
+            color: #006621;
+        }
+        .more{
+width: 20%;
+
+
+padding: 10px;
+font-size: 16px;
+border: 1px solid #dfe1e5;
+
+outline: none;
+box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+        }
+        /* Styles for Related Shortcuts */
+        .related-shortcuts {
+     /*   display: flex;
+        flex-wrap: wrap;*/
+        justify-content: center;
+        margin-top: 20px;
+        }
+        
+        .shortcut {
+        margin: 10px;
+        /*width: 200px;*/
+                /*width: 100%;*/
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: left; /* Align text to the left */
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .shortcut img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+        }
+        
+        .shortcut h4 {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #4285f4; /* Google blue */
+        margin-bottom: 5px;
+        }
+        
+        .shortcut p {
+        color: #333;
+        margin-bottom: 10px;
+        }
+        
+        .shortcut a {
+        text-decoration: none;
+        color: #4285f4; /* Google blue */
+        font-weight: bold;
+        }
+        
+    </style>
+    
+</head>
+<body>
+    <div class="search-container">
+        <div class="logo">
+            <img src="./img/googlelogo_color_272x92dp.png" alt="Logo">
+        </div>
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-button">Search</button>
+        </div>
+        <div id="loading-area"></div>
+        <div id="results">
+
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+<script>
+    const searchButton = document.getElementById('search-button');
+    const searchInput = document.getElementById('search-input');
+    const resultsArea = document.getElementById('results');
+
+    searchButton.addEventListener('click', function() {
+        const query = searchInput.value;
+        if (query.trim() !== "") { 
+            // Display loading indicator
+            resultsArea.innerHTML = '<div id="loading-area">Loading...</div>';
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "search.php?q=" + encodeURIComponent(query), true); 
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    resultsArea.innerHTML = xhr.responseText;
+                } else {
+                    resultsArea.innerHTML = "Error: " + xhr.status;
+                }
+            };
+            xhr.send();
+        } else {
+            resultsArea.innerHTML = "Please enter a search query.";
+        }
+        });
+    
+
+</script>
+
+<script>
+function loadMore(query, startIndex) {
+  // Display loading indicator
+    const moreResultsArea = document.getElementById('more-results');
+  document.getElementById('load-more-button').disabled = true;
+  document.getElementById('load-more-button').innerHTML = 'Loading...';
+
+
+setTimeout(function() {
+
+
+
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", "search.php?q=" + encodeURIComponent(query) + "&startIndex=" + startIndex, true); 
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = xhr.responseText;
+   
+
+var temp = tempDiv.querySelector('.main-results');
+
+      moreResultsArea.innerHTML +=temp.innerHTML;
+        // alert(xhr.responseText); 
+      document.getElementById('load-more-button').disabled = false;
+      document.getElementById('load-more-button').innerHTML = 'More';
+    } else {
+      // Handle error
+      console.error("Error loading more results: " + xhr.status);
+    }
+  };
+  xhr.send();
+}, 2000);
+}
+
+
+</script>
